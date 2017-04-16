@@ -1,0 +1,73 @@
+bubblesort:
+#Reserved registers:
+#	r3: Array pointer
+#	r4: isSorted boolean
+#	r5: Array length -> end of array pointer
+#	r6: Sort direction boolean
+#	r7: Array element pointer 1
+#	r8: Array element pointer 2
+#	r9: Temporary array element register 1
+#	r10: Temporary array element register 2
+#Input registers:
+#	r3: Pointer to first element of 32 bit array
+#	r5: Length of array in items
+#	r6: Boolean which determins whether to sort from least to greatest or greatest to least. All bits except the Least Significant Bit are ignored. 
+#	    Values:
+#	      0: Least to greatest.
+#	      1: Greatest to least.
+#Return registers:
+#	r3: Array pointer
+#	r4: isSorted boolean
+li r4,0x1 #set isSorted to true
+cmplwi r5,0x1 #check if array length is less than 1 items
+ble- bubblesortend #is sorted
+mr r7,r3
+subi r4,r4,0x1 #aligns to array that starts at index zero instead of one
+mulli r4,r4,0x4 #offset to last element of array
+add r4,r4,r7 #sets r4 equal to pointer
+#sets r7 and r8 equal to pointers to the first and second items of array
+mr r7,r3
+mr r8,r3
+addi r8,r8,0x4
+cmplwi r6,0x1 #checks sort order
+beq- bubblesortloopgtlstart
+bubblesortloopltg:
+#load items into r9 and r10
+lwz r9,0x0(r7)
+lwz r10,0x0(r8)
+cmpw r9,r10
+bge+ bubblsortloopltgswap
+bubblesortloopltgend:
+cmpw r8,r5 #checks if done iterating through array
+beq- bubblesortend
+addi r7,r7,0x4
+addi r8,r8,0x4 #increments item pointers
+b bubblesortloopltg
+bubblesortloopltgswap:
+stw r9,0x0(r8)
+stw r10,0x0(r7)
+li r4,0x0
+b bubblesortloopltgend
+bubblesortloopgtlstart:
+mr r7,r5
+mr r8,r5
+subi r8,r8,0x4 #load last two item pointers into r7 and r8
+bubblesortloopgtl:
+lwz r9,0x0(r7)
+lwz r10,0x0(r8)
+cmpw r9,r10
+bge+ bubblesortloopgtlswap
+bubblesortloopgtlend:
+cmpw r8,r3
+beq- bubblesortend #check if reached first item of array
+subi r7,r7,0x4
+subi r8,r8,0x4 #decrement item pointers
+b bubblesortloopgtl
+bubblesortloopgtlswap:
+stw r9,0x0(r8)
+stw r10,0x0(r7)
+li r4,0x0
+b bubblesortloopgtlend
+bubblesortend:
+blr
+
