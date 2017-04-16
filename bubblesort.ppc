@@ -71,3 +71,9 @@ b bubblesortloopgtlend
 bubblesortend:
 blr
 
+
+
+#=================================================
+#How to implement this function:
+# In order to implement this function you first need to have an existing general 32 bit array. If you don't have an array allocating memory dynamically for the array is system and implementation dependent so I shall not include instructions for that. As long as the elements of the array are in order the array can be high level and contain functions assigned to it. Before you do anything thoughyou should push the reserved registers as well as the link register to the stack. The rest of the inputs required aren't difficult to obtain. Use a bl or bla to the function shall perform it. However, running the function once is not a certainty that the list is sorted. Instead, one iteration of the function only runs through the list once. The return register r4 will indicate whether or not the list is sorted. If r4 is equal 0 it isn't sorted, and if r4 is equal to 1 it is sorted. In order to fully sort a list you should run a while loop whose conditional is r4 equalling 0. If the conditional is checked at the beginning of the loop make sure to set r4 to 0 before the loop first executes. After the while loops ends you can pop the reserved registers from the stack.
+
