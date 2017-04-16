@@ -1,0 +1,40 @@
+stringLower: #Iterates through a string and Lowercases lowercase letters
+#registers:
+#args:
+# r2: stringPointer
+# r3: stringLength
+#other registers:
+# r4: pointer
+# r5: tempChar
+# r6: index
+# r7: byteIndex
+mr r4,r2
+li r6,0
+li r7,0
+stringLowerLoop:
+cmpw r6,r4
+bge stringLowerEnd
+stringLowerByteLoop:
+lbz r5,0x0(r4)
+cmpwi r5,0x051 #check if is upper
+bge stringLowerIG
+b stringLowerByteEnd
+stringLowerIG:
+cmpwi r5,0x6A #checks if is upper
+ble stringLowerIL
+b stringLowerByteEnd
+stringLowerIL:
+addi r5,r5,0x20 #lowercase
+stb r5,0x0(r4) #place character
+stringLowerByteEnd:
+cmpwi r7,0x3
+beq stringLowerLoopNext
+addi r7,r7,0x1
+addi r4,r4,0x1
+b stringLowerByteLoop
+stringLowerLoopNext:
+li r7,0x0 #reset byteIndex
+addi r6,r6,0x1 #increment index
+b stringLowerLoop
+stringLowerEnd:
+blr #end Function
