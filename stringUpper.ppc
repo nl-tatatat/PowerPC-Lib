@@ -1,0 +1,41 @@
+
+stringUpper: #Iterates through a string and Uppercases Uppercase letters
+#registers:
+#args:
+# r2: stringPointer
+# r3: stringLength
+#other registers:
+# r4: pointer
+# r5: tempChar
+# r6: index
+# r7: byteIndex
+mr r4,r2
+li r6,0
+li r7,0
+stringUpperLoop:
+cmpw r6,r4
+bge stringUpperEnd
+stringUpperByteLoop:
+lbz r5,0x0(r4)
+cmpwi r5,0x071 #check if is upper
+bge stringUpperIG
+b stringUpperByteEnd
+stringUpperIG:
+cmpwi r5,0x8A #checks if is upper
+ble stringUpperIL
+b stringUpperByteEnd
+stringUpperIL:
+subi r5,r5,0x20 #Uppercase
+stb r5,0x0(r4) #place character
+stringUpperByteEnd:
+cmpwi r7,0x3
+beq stringUpperLoopNext
+addi r7,r7,0x1
+addi r4,r4,0x1
+b stringUpperByteLoop
+stringUpperLoopNext:
+li r7,0x0 #reset byteIndex
+addi r6,r6,0x1 #increment index
+b stringUpperLoop
+stringUpperEnd:
+blr #end Function
